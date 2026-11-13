@@ -1,0 +1,379 @@
+{% extends 'base.html' %}
+
+{% block title %}HabitFlow — Small habits. Extraordinary progress.{% endblock %}
+
+{% block content %}
+<!-- Top Navigation -->
+<nav class="landing-nav">
+  <div class="landing-nav-inner">
+    <a href="{{ url_for('main.index') }}" class="brand-link">
+      <div class="brand-logo-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <span>HabitFlow</span>
+    </a>
+
+    <ul class="landing-nav-links" style="margin: 0; padding: 0;">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#preview">Dashboard</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+
+    <div style="display: flex; align-items: center; gap: 12px;">
+      {% if user %}
+        <a href="{{ url_for('dashboard.index') }}" class="btn btn-primary btn-sm">Go to App</a>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}" class="btn btn-subtle btn-sm">Sign In</a>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm">Get Started</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<!-- Global Flash Messages on Landing Page -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div style="max-width: 900px; margin: 20px auto 0; padding: 0 24px;">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          <span>{{ message }}</span>
+          <button type="button" onclick="this.parentElement.remove()" style="background:none; border:none; color:inherit; cursor:pointer; font-size:1.1rem; line-height:1;">&times;</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-pill">
+    <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--primary);"></span>
+    <span>HabitFlow 2.0 is live &bull; Designed for high performers</span>
+  </div>
+
+  <h1 class="hero-headline">Small habits.<br>Extraordinary progress.</h1>
+  <p class="hero-subhead">
+    Build better days. One habit at a time. HabitFlow combines atomic consistency, clean visual analytics, and frictionless check-ins into an intentional productivity workspace.
+  </p>
+
+  <div class="hero-actions">
+    <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
+      <span>Start Building Habits</span>
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+    </a>
+    <a href="{{ url_for('auth.demo_login') }}" class="btn btn-secondary btn-lg">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+      <span>Instant Demo Mode</span>
+    </a>
+  </div>
+
+  <!-- Interactive Live Dashboard Mock Preview -->
+  <div class="hero-preview-container" id="preview">
+    <!-- Window Bar -->
+    <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:14px; margin-bottom:16px; border-bottom:1px solid #E2E8F0;">
+      <div style="display:flex; gap:6px;">
+        <span style="width:10px; height:10px; border-radius:50%; background:#EF4444; display:inline-block;"></span>
+        <span style="width:10px; height:10px; border-radius:50%; background:#F59E0B; display:inline-block;"></span>
+        <span style="width:10px; height:10px; border-radius:50%; background:#10B981; display:inline-block;"></span>
+      </div>
+      <span style="font-size:0.75rem; color:#94A3B8; font-weight:500;">app.habitflow.com/overview</span>
+      <div style="width:40px;"></div>
+    </div>
+
+    <!-- Inner Preview Cards -->
+    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin-bottom:18px;">
+      <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:14px; text-align:left;">
+        <div style="font-size:0.7rem; color:#64748B; font-weight:600; text-transform:uppercase;">Active Habits</div>
+        <div style="font-size:1.5rem; font-weight:700; color:#0F172A; margin:4px 0;">5</div>
+        <span style="font-size:0.75rem; color:#10B981; font-weight:500;">100% On Track</span>
+      </div>
+      <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:14px; text-align:left;">
+        <div style="font-size:0.7rem; color:#64748B; font-weight:600; text-transform:uppercase;">Daily Success</div>
+        <div style="font-size:1.5rem; font-weight:700; color:#0F172A; margin:4px 0;">80%</div>
+        <span style="font-size:0.75rem; color:#4F46E5; font-weight:500;">4 of 5 Done</span>
+      </div>
+      <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:14px; text-align:left;">
+        <div style="font-size:0.7rem; color:#64748B; font-weight:600; text-transform:uppercase;">Current Streak</div>
+        <div style="font-size:1.5rem; font-weight:700; color:#EA580C; margin:4px 0;">🔥 12 days</div>
+        <span style="font-size:0.75rem; color:#64748B; font-weight:500;">Personal best</span>
+      </div>
+      <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:14px; text-align:left;">
+        <div style="font-size:0.7rem; color:#64748B; font-weight:600; text-transform:uppercase;">Completions</div>
+        <div style="font-size:1.5rem; font-weight:700; color:#0F172A; margin:4px 0;">128</div>
+        <span style="font-size:0.75rem; color:#10B981; font-weight:500;">All-time total</span>
+      </div>
+    </div>
+
+    <!-- Habit Checklist Preview Featuring Reading, Study, Water Intake -->
+    <div style="text-align:left; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:12px; padding:16px;">
+      <div style="font-size:0.85rem; font-weight:600; color:#0F172A; margin-bottom:12px;">Today's Focus Habits</div>
+
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid #E2E8F0; border-radius:8px; margin-bottom:8px; background:#F8FAFC;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <input type="checkbox" checked class="custom-checkbox" style="cursor:default;" disabled>
+          <div>
+            <div style="font-weight:600; font-size:0.9rem; text-decoration:line-through; color:#64748B;">Daily Reading</div>
+            <div style="font-size:0.75rem; color:#94A3B8;">Target: 20 pages &bull; Learning</div>
+          </div>
+        </div>
+        <span class="badge badge-success">Completed</span>
+      </div>
+
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid #E2E8F0; border-radius:8px; margin-bottom:8px; background:#FFFFFF;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <input type="checkbox" class="custom-checkbox" style="cursor:default;" disabled>
+          <div>
+            <div style="font-weight:600; font-size:0.9rem; color:#0F172A;">Focused Study</div>
+            <div style="font-size:0.75rem; color:#64748B;">Target: 60 minutes deep work &bull; Productivity</div>
+          </div>
+        </div>
+        <span class="badge badge-neutral">In Progress</span>
+      </div>
+
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid #E2E8F0; border-radius:8px; background:#F8FAFC;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <input type="checkbox" checked class="custom-checkbox" style="cursor:default;" disabled>
+          <div>
+            <div style="font-weight:600; font-size:0.9rem; text-decoration:line-through; color:#64748B;">Water Intake</div>
+            <div style="font-size:0.75rem; color:#94A3B8;">Target: 8 glasses (2.5L) &bull; Health</div>
+          </div>
+        </div>
+        <span class="badge badge-success">Completed</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Showcase -->
+<section style="background: #FFFFFF; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 48px 24px;">
+  <div style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; text-align: center;">
+    <div>
+      <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary); letter-spacing: -0.03em;">94.2%</div>
+      <div style="font-weight: 600; color: var(--text); margin-top: 4px;">Streak Retention Rate</div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Users stick to habits 3x longer than traditional paper notes.</p>
+    </div>
+    <div>
+      <div style="font-size: 2.5rem; font-weight: 800; color: #10B981; letter-spacing: -0.03em;">100k+</div>
+      <div style="font-weight: 600; color: var(--text); margin-top: 4px;">Habit Check-ins Logged</div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Built on compound daily micro-disciplines.</p>
+    </div>
+    <div>
+      <div style="font-size: 2.5rem; font-weight: 800; color: #8B5CF6; letter-spacing: -0.03em;">Zero Clutter</div>
+      <div style="font-weight: 600; color: var(--text); margin-top: 4px;">Frictionless Minimal UX</div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Clean Linear and Notion-inspired design discipline.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Key Features Section -->
+<section class="features-section" id="features">
+  <div class="section-tag">Powerful Capabilities</div>
+  <h2 class="section-heading">Designed for effortless daily follow-through</h2>
+  <p class="section-subhead">Every interface interaction is engineered to remove friction between you and your daily goals.</p>
+
+  <div class="grid-3">
+    <div class="feature-box">
+      <div class="feature-icon-wrap">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+      </div>
+      <h3 style="font-size: 1.15rem; margin-bottom: 8px;">Unbroken Streaks</h3>
+      <p style="font-size: 0.875rem;">Dynamic real-time streak calculations that honor your consistency and motivate you to never break the chain.</p>
+    </div>
+
+    <div class="feature-box">
+      <div class="feature-icon-wrap" style="background: #F3E8FF; color: #8B5CF6;">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+      </div>
+      <h3 style="font-size: 1.15rem; margin-bottom: 8px;">Sophisticated Analytics</h3>
+      <p style="font-size: 0.875rem;">Interactive Chart.js visualizations that track weekly consistency, monthly trajectories, and category trends.</p>
+    </div>
+
+    <div class="feature-box">
+      <div class="feature-icon-wrap" style="background: #E0F2FE; color: #0284C7;">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+      </div>
+      <h3 style="font-size: 1.15rem; margin-bottom: 8px;">Rhythm Calendar</h3>
+      <p style="font-size: 0.875rem;">Visual monthly calendar with color-coded success rates and deep day inspection for every check-in.</p>
+    </div>
+
+    <div class="feature-box">
+      <div class="feature-icon-wrap" style="background: #ECFDF5; color: #10B981;">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+      </div>
+      <h3 style="font-size: 1.15rem; margin-bottom: 8px;">Gamified Milestones</h3>
+      <p style="font-size: 0.875rem;">Earn tangible milestone badges from your first step to 100-day streaks. Progress is automatically verified.</p>
+    </div>
+
+    <div class="feature-box">
+      <div class="feature-icon-wrap" style="background: #FEF3C7; color: #D97706;">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+      </div>
+      <h3 style="font-size: 1.15rem; margin-bottom: 8px;">In-App Reminders</h3>
+      <p style="font-size: 0.875rem;">Custom reminder schedules per habit. Receive timely notifications while working inside your app session.</p>
+    </div>
+
+    <div class="feature-box">
+      <div class="feature-icon-wrap" style="background: #FEE2E2; color: #EF4444;">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+      </div>
+      <h3 style="font-size: 1.15rem; margin-bottom: 8px;">Secure & Private</h3>
+      <p style="font-size: 0.875rem;">Encrypted password hashing, strict session isolation, and zero tracking. Your habit journey is 100% yours.</p>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section style="background: #FFFFFF; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 80px 24px;" id="how-it-works">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div class="section-tag">How HabitFlow Works</div>
+    <h2 class="section-heading">Three steps to effortless momentum</h2>
+    <p class="section-subhead">Simple, deliberate systems always beat complicated willpower.</p>
+
+    <div class="grid-3">
+      <div style="text-align: center; padding: 20px;">
+        <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem; margin: 0 auto 16px;">1</div>
+        <h3 style="font-size: 1.1rem; margin-bottom: 8px;">Define Your Rhythm</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Set clear targets for reading, focused study, hydration, or movement with specific targets and reminders.</p>
+      </div>
+
+      <div style="text-align: center; padding: 20px;">
+        <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem; margin: 0 auto 16px;">2</div>
+        <h3 style="font-size: 1.1rem; margin-bottom: 8px;">Check In Frictionlessly</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">One-click check-ins from your phone or desktop. Instant visual gratification and streak protection.</p>
+      </div>
+
+      <div style="text-align: center; padding: 20px;">
+        <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem; margin: 0 auto 16px;">3</div>
+        <h3 style="font-size: 1.1rem; margin-bottom: 8px;">Watch Compound Growth</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Visualize your transformation over weeks and months through interactive heatmaps and metrics.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials (Sample / Demo Content clearly identified) -->
+<section style="padding: 80px 24px; max-width: 1200px; margin: 0 auto;">
+  <div class="section-tag">Community Feedback (Sample / Demo)</div>
+  <h2 class="section-heading">Loved by founders, developers & creators</h2>
+  <p class="section-subhead">Here is what early adopters say about building their daily routines with HabitFlow.</p>
+
+  <div class="grid-3">
+    <div class="card" style="padding: 24px;">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+        <div style="width:40px; height:40px; border-radius:50%; background:#4F46E5; color:#FFF; display:flex; align-items:center; justify-content:center; font-weight:700;">AR</div>
+        <div>
+          <div style="font-weight:600; font-size:0.9rem;">Alex Rivera</div>
+          <div style="font-size:0.75rem; color:var(--text-muted);">Senior Software Engineer (Demo User)</div>
+        </div>
+      </div>
+      <p style="font-size:0.875rem; line-height:1.6; color:var(--text-secondary);">
+        "HabitFlow gives me the same clean, minimalist calm that Linear gave our engineering workflows. Tracking 20 pages of daily reading and water intake is now completely on autopilot."
+      </p>
+    </div>
+
+    <div class="card" style="padding: 24px;">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+        <div style="width:40px; height:40px; border-radius:50%; background:#10B981; color:#FFF; display:flex; align-items:center; justify-content:center; font-weight:700;">SM</div>
+        <div>
+          <div style="font-weight:600; font-size:0.9rem;">Sarah Miller</div>
+          <div style="font-size:0.75rem; color:var(--text-muted);">Product Designer (Demo User)</div>
+        </div>
+      </div>
+      <p style="font-size:0.875rem; line-height:1.6; color:var(--text-secondary);">
+        "The calendar view and color-coded completion rate make it impossible to deceive yourself. You see your discipline mapped out visually. It's truly motivating."
+      </p>
+    </div>
+
+    <div class="card" style="padding: 24px;">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+        <div style="width:40px; height:40px; border-radius:50%; background:#8B5CF6; color:#FFF; display:flex; align-items:center; justify-content:center; font-weight:700;">DC</div>
+        <div>
+          <div style="font-weight:600; font-size:0.9rem;">Dr. David Chen</div>
+          <div style="font-size:0.75rem; color:var(--text-muted);">Researcher & Author (Demo User)</div>
+        </div>
+      </div>
+      <p style="font-size:0.875rem; line-height:1.6; color:var(--text-secondary);">
+        "The pre-seeded habits like Focused Study and Water Intake fit my daily workflow out of the box. No endless manual setup—just login, check off, and build momentum."
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Accordion -->
+<section style="background: #FFFFFF; border-top: 1px solid var(--border); padding: 80px 24px;" id="faq">
+  <div style="max-width: 800px; margin: 0 auto;">
+    <div class="section-tag">Common Inquiries</div>
+    <h2 class="section-heading">Frequently Asked Questions</h2>
+    <p class="section-subhead">Everything you need to know about getting started with HabitFlow.</p>
+
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      <div class="card" style="padding: 20px;">
+        <div style="font-weight: 600; font-size: 1rem; color: var(--text); margin-bottom: 6px;">Which habits come pre-loaded when I create an account?</div>
+        <p style="font-size: 0.875rem; color: var(--text-secondary);">
+          Every new user automatically starts with three foundational daily habits: <strong>Daily Reading</strong> (Learning), <strong>Focused Study</strong> (Productivity), and <strong>Water Intake</strong> (Health), which you can edit, customize, or expand at any time.
+        </p>
+      </div>
+
+      <div class="card" style="padding: 20px;">
+        <div style="font-weight: 600; font-size: 1rem; color: var(--text); margin-bottom: 6px;">How do the streak calculations work?</div>
+        <p style="font-size: 0.875rem; color: var(--text-secondary);">
+          Streaks are calculated consecutively based on actual completed records stored in your SQLite database. You maintain an active streak if you log habit progress today, or if you completed habits yesterday and continue today.
+        </p>
+      </div>
+
+      <div class="card" style="padding: 20px;">
+        <div style="font-weight: 600; font-size: 1rem; color: var(--text); margin-bottom: 6px;">How do reminders work?</div>
+        <p style="font-size: 0.875rem; color: var(--text-secondary);">
+          HabitFlow provides both in-app notification indicators (topbar reminder bell with active countdowns) and standard Web Browser Notifications. Technically, browser notifications run while your browser tab is open.
+        </p>
+      </div>
+
+      <div class="card" style="padding: 20px;">
+        <div style="font-weight: 600; font-size: 1rem; color: var(--text); margin-bottom: 6px;">Can I run and deploy HabitFlow on PythonAnywhere?</div>
+        <p style="font-size: 0.875rem; color: var(--text-secondary);">
+          Yes! HabitFlow is architected with Python 3.12, standard Flask, and persistent SQLite, with zero external binary bottlenecks, making deployment to PythonAnywhere or any standard Linux VPS seamless.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA Section -->
+<section style="background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 100%); color: #FFFFFF; padding: 80px 24px; text-align: center;">
+  <div style="max-width: 700px; margin: 0 auto;">
+    <h2 style="font-size: 2.5rem; font-weight: 800; color: #FFFFFF; margin-bottom: 16px; letter-spacing: -0.03em;">
+      Ready to build better days?
+    </h2>
+    <p style="font-size: 1.1rem; color: #94A3B8; margin-bottom: 32px;">
+      Join thousands of intentional achievers who make daily progress inevitable.
+    </p>
+    <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+      <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">Start Free Today</a>
+      <a href="{{ url_for('auth.demo_login') }}" class="btn btn-secondary btn-lg" style="background: transparent; color: #FFF; border-color: rgba(255,255,255,0.25);">Explore Live Demo</a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer style="background: #FFFFFF; border-top: 1px solid var(--border); padding: 48px 24px;">
+  <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div class="brand-logo-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <span style="font-weight: 700; font-size: 1.1rem; color: var(--text);">HabitFlow</span>
+      <span style="font-size: 0.8rem; color: var(--text-muted); margin-left: 8px;">&copy; {{ today_formatted[-4:] }} HabitFlow Inc. All rights reserved.</span>
+    </div>
+
+    <div style="display: flex; gap: 20px; font-size: 0.85rem; color: var(--text-muted);">
+      <a href="{{ url_for('main.privacy') }}">Privacy Policy</a>
+      <a href="{{ url_for('main.terms') }}">Terms of Service</a>
+      <a href="#preview">Product Preview</a>
+      <a href="{{ url_for('auth.login') }}">Account Sign In</a>
+    </div>
+  </div>
+</footer>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends 'app_base.html' %}
+
+{% block title %}Calendar Rhythm — HabitFlow{% endblock %}
+
+{% block app_content %}
+<!-- Header Bar -->
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Calendar Rhythm</h1>
+    <p class="page-subtitle">Monthly visual habit tracking and daily completion history.</p>
+  </div>
+</div>
+
+<!-- Calendar Card Container -->
+<div class="calendar-wrapper">
+  <!-- Navigation Bar -->
+  <div class="calendar-header-bar">
+    <div class="calendar-month-title">
+      {{ month_name }} {{ year }}
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <a href="{{ url_for('calendar.index', year=prev_year, month=prev_month) }}" class="btn btn-secondary btn-sm" title="Previous Month">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        <span>Prev</span>
+      </a>
+
+      <a href="{{ url_for('calendar.index') }}" class="btn btn-secondary btn-sm">
+        Today
+      </a>
+
+      <a href="{{ url_for('calendar.index', year=next_year, month=next_month) }}" class="btn btn-secondary btn-sm" title="Next Month">
+        <span>Next</span>
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px; font-size: 0.775rem; color: var(--text-muted); flex-wrap: wrap;">
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <span style="width: 12px; height: 12px; border-radius: 3px; background: #ECFDF5; border: 1px solid #A7F3D0; display: inline-block;"></span>
+      <span>100% Completed</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <span style="width: 12px; height: 12px; border-radius: 3px; background: #FFFBEB; border: 1px solid #FDE68A; display: inline-block;"></span>
+      <span>Partially Completed</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <span style="width: 12px; height: 12px; border-radius: 3px; background: #F8FAFC; border: 1px solid #E2E8F0; display: inline-block;"></span>
+      <span>Missed / No Check-ins</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <span style="width: 12px; height: 12px; border-radius: 3px; border: 2px solid var(--primary); display: inline-block;"></span>
+      <span>Today</span>
+    </div>
+  </div>
+
+  <!-- Weekday Labels -->
+  <div class="calendar-grid" style="margin-bottom: 8px;">
+    <div class="cal-weekday">Mon</div>
+    <div class="cal-weekday">Tue</div>
+    <div class="cal-weekday">Wed</div>
+    <div class="cal-weekday">Thu</div>
+    <div class="cal-weekday">Fri</div>
+    <div class="cal-weekday">Sat</div>
+    <div class="cal-weekday">Sun</div>
+  </div>
+
+  <!-- Days Grid -->
+  <div class="calendar-grid">
+    {% for week in month_days %}
+      {% for day in week %}
+        {% if day.day == 0 %}
+          <div class="cal-day-cell empty"></div>
+        {% else %}
+          <div class="cal-day-cell {% if day.is_today %}is-today{% endif %}" 
+               data-date="{{ day.date_str }}"
+               title="Click to view habits on {{ day.date_str }}">
+            
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <span class="cal-day-number">{{ day.day }}</span>
+              {% if day.is_today %}
+                <span class="badge badge-primary" style="font-size: 0.65rem; padding: 1px 5px;">Today</span>
+              {% endif %}
+            </div>
+
+            <div style="margin-top: auto;">
+              {% if day.status == 'complete' %}
+                <div class="cal-status-badge status-complete">
+                  ✓ 100%
+                </div>
+              {% elif day.status == 'partial' %}
+                <div class="cal-status-badge status-partial">
+                  {{ day.completed_count }}/{{ day.total_active }}
+                </div>
+              {% elif day.status == 'missed' %}
+                <div class="cal-status-badge status-missed">
+                  0%
+                </div>
+              {% else %}
+                <div class="cal-status-badge status-future">
+                  —
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Day Inspector Modal -->
+<div class="modal-overlay" id="dayDetailsModal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h3 id="dayModalTitle">Day Details</h3>
+      <button type="button" class="btn-subtle" data-modal-close style="font-size: 1.25rem; line-height: 1;">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div id="dayModalSummary"></div>
+      <div style="font-weight: 600; font-size: 0.85rem; color: var(--text); margin-bottom: 8px;">Habits Status on this Day</div>
+      <div id="dayModalHabitsList"></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary btn-sm" data-modal-close>Close</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
+{% endblock %}

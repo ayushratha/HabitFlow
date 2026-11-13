@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Account — HabitFlow{% endblock %}
+
+{% block content %}
+<div class="auth-split-wrapper">
+  <!-- Left Side: Brand Imagery & Philosophy -->
+  <div class="auth-split-left">
+    <div>
+      <a href="{{ url_for('main.index') }}" class="brand-link" style="color: #FFFFFF;">
+        <div class="brand-logo-icon">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <span>HabitFlow</span>
+      </a>
+    </div>
+
+    <div>
+      <div style="font-size: 2.2rem; font-weight: 700; line-height: 1.25; margin-bottom: 16px;">
+        "Small disciplines repeated with consistency every day lead to great achievements."
+      </div>
+      <p style="color: #94A3B8; font-size: 1rem; margin-bottom: 24px;">
+        Join over 10,000+ intentional achievers compounding their progress.
+      </p>
+
+      <!-- Pre-loaded habits notice -->
+      <div style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; padding: 18px;">
+        <div style="font-size: 0.825rem; font-weight: 600; text-transform: uppercase; color: #818CF8; margin-bottom: 8px;">Included Free Starter Habits</div>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; color: #E2E8F0; display: flex; flex-direction: column; gap: 6px;">
+          <li style="display:flex; align-items:center; gap:8px;">
+            <svg width="14" height="14" fill="none" stroke="#10B981" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span><strong>Daily Reading:</strong> 20 pages / 30 mins (Learning)</span>
+          </li>
+          <li style="display:flex; align-items:center; gap:8px;">
+            <svg width="14" height="14" fill="none" stroke="#10B981" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span><strong>Focused Study:</strong> 60 mins deep session (Productivity)</span>
+          </li>
+          <li style="display:flex; align-items:center; gap:8px;">
+            <svg width="14" height="14" fill="none" stroke="#10B981" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span><strong>Water Intake:</strong> 8 glasses / 2.5L daily (Health)</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="font-size: 0.825rem; color: #64748B;">
+      &copy; {{ today_formatted[-4:] }} HabitFlow Inc. All rights reserved.
+    </div>
+  </div>
+
+  <!-- Right Side: Clean Register Form -->
+  <div class="auth-split-right">
+    <div style="margin-bottom: 28px;">
+      <h2 style="font-size: 1.75rem; font-weight: 700; color: var(--text); margin-bottom: 6px;">Create your account</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Start tracking your habits with premium precision.</p>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            <span>{{ message }}</span>
+            <button type="button" onclick="this.parentElement.remove()" style="background:none; border:none; color:inherit; cursor:pointer;">&times;</button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('auth.register') }}" method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+      <div class="form-group">
+        <label class="form-label" for="reg_name">Full Name</label>
+        <input type="text" id="reg_name" name="name" class="form-control" placeholder="Alex Vance" required autofocus>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="reg_email">Email address</label>
+        <input type="email" id="reg_email" name="email" class="form-control" placeholder="alex@example.com" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="reg_password">Password</label>
+        <div style="position: relative;">
+          <input type="password" id="reg_password" name="password" class="form-control" style="padding-right: 42px;" placeholder="At least 6 characters" required>
+          <button type="button" class="btn-subtle password-toggle-btn" data-target="reg_password" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); padding: 4px;" aria-label="Toggle password visibility">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="reg_confirm">Confirm Password</label>
+        <div style="position: relative;">
+          <input type="password" id="reg_confirm" name="confirm_password" class="form-control" style="padding-right: 42px;" placeholder="Repeat password" required>
+          <button type="button" class="btn-subtle password-toggle-btn" data-target="reg_confirm" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); padding: 4px;" aria-label="Toggle password visibility">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-weight: 600; margin-top: 8px;">
+        Create HabitFlow Account
+      </button>
+    </form>
+
+    <div style="margin-top: 24px; text-align: center; font-size: 0.875rem; color: var(--text-muted);">
+      Already have an account? 
+      <a href="{{ url_for('auth.login') }}" style="font-weight: 600;">Sign in here</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

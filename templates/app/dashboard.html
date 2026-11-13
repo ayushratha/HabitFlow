@@ -1,0 +1,260 @@
+{% extends 'app_base.html' %}
+
+{% block title %}Dashboard Overview — HabitFlow{% endblock %}
+
+{% block app_content %}
+<!-- Dashboard Header -->
+<div class="page-header">
+  <div>
+    <h1 class="page-title">{{ greeting }}, {{ user.name.split()[0] if user and user.name else 'there' }}</h1>
+    <p class="page-subtitle">Every small step counts. Let's make today productive.</p>
+  </div>
+  <div style="display: flex; gap: 10px;">
+    <button type="button" class="btn btn-primary" data-modal-open="quickAddModal">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      <span>Quick Add Habit</span>
+    </button>
+  </div>
+</div>
+
+<!-- Motivational Quote Banner -->
+<div class="card" style="margin-bottom: 24px; background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%); border-left: 4px solid var(--primary); padding: 16px 20px;">
+  <div style="display: flex; align-items: center; gap: 12px;">
+    <div style="color: var(--primary);">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"></path><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"></path></svg>
+    </div>
+    <div style="flex: 1;">
+      <span style="font-size: 0.9rem; font-weight: 500; color: var(--text);">"{{ quote }}"</span>
+      <span style="font-size: 0.8rem; color: var(--text-muted); margin-left: 8px;">— {{ author }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- 5 KPI Metric Cards -->
+<div class="grid-5" style="margin-bottom: 28px;">
+  <div class="metric-card">
+    <div class="metric-header">
+      <span class="metric-label">Active Habits</span>
+      <div class="metric-icon-wrap" style="background: var(--primary-light); color: var(--primary);">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+      </div>
+    </div>
+    <div class="metric-value">{{ stats.total_active }}</div>
+    <div class="metric-sub">
+      <span>Currently tracking</span>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-header">
+      <span class="metric-label">Completed Today</span>
+      <div class="metric-icon-wrap" style="background: var(--success-light); color: var(--success);">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+    </div>
+    <div class="metric-value" id="statCompletedToday">{{ stats.completed_today }}</div>
+    <div class="metric-sub">
+      <span>of {{ stats.total_active }} total</span>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-header">
+      <span class="metric-label">Daily Success Rate</span>
+      <div class="metric-icon-wrap" style="background: #F3E8FF; color: var(--accent-purple);">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+      </div>
+    </div>
+    <div class="metric-value" id="statDailySuccessRate">{{ stats.daily_success_rate }}%</div>
+    <div class="metric-sub">
+      <div class="progress-bar-wrap" style="height: 5px; flex: 1; margin-right: 6px;">
+        <div class="progress-bar-fill" id="statTodayProgressFill" style="width: {{ stats.daily_success_rate }}%; background-color: var(--primary);"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-header">
+      <span class="metric-label">Current Streak</span>
+      <div class="metric-icon-wrap" style="background: #FFF7ED; color: #EA580C;">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+      </div>
+    </div>
+    <div class="metric-value" id="statCurrentStreak" style="color: #EA580C;">{{ stats.current_streak }} days</div>
+    <div class="metric-sub">
+      <span>Consecutive days</span>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-header">
+      <span class="metric-label">Best Streak</span>
+      <div class="metric-icon-wrap" style="background: #FEF3C7; color: #D97706;">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+      </div>
+    </div>
+    <div class="metric-value" id="statBestStreak">{{ stats.best_streak }} days</div>
+    <div class="metric-sub">
+      <span>All-time record</span>
+    </div>
+  </div>
+</div>
+
+<!-- Main Dashboard Split (Today's Checklist vs Visual Rhythm & Streaks) -->
+<div style="display: grid; grid-template-columns: 1.55fr 1fr; gap: 24px; align-items: start;">
+  
+  <!-- Left Column: Today's Habits Checklist -->
+  <div>
+    <div class="card" style="margin-bottom: 24px;">
+      <div class="card-header">
+        <div>
+          <h3>Today's Habits Checklist</h3>
+          <p class="text-sm text-muted" style="margin-top: 2px;">Click any checkbox to immediately log your progress.</p>
+        </div>
+        <a href="{{ url_for('habits.index') }}" class="btn btn-secondary btn-sm">Manage All</a>
+      </div>
+
+      <div class="card-body" style="padding: 16px 20px;">
+        {% if habits|length == 0 %}
+          <div style="text-align: center; padding: 48px 20px;">
+            <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--surface-muted); color: var(--text-muted); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+            </div>
+            <h4 style="margin-bottom: 6px;">No habits yet</h4>
+            <p class="text-sm text-muted" style="margin-bottom: 16px;">Create your first habit to begin building unstoppable momentum.</p>
+            <button type="button" class="btn btn-primary btn-sm" data-modal-open="quickAddModal">Add Your First Habit</button>
+          </div>
+        {% else %}
+          <div id="todayHabitsList">
+            {% for habit in habits %}
+              <div class="habit-checklist-card {% if habit.completed_today %}is-completed{% endif %}" data-habit-id="{{ habit.id }}">
+                <div class="habit-check-left">
+                  <input type="checkbox" 
+                         class="custom-checkbox habit-toggle-checkbox" 
+                         data-habit-id="{{ habit.id }}"
+                         {% if habit.completed_today %}checked{% endif %}
+                         title="Toggle habit completion">
+                  
+                  <div class="habit-icon-pill" style="background-color: {{ habit.color }}18; color: {{ habit.color }};">
+                    {% if habit.icon == 'book-open' %}
+                      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    {% elif habit.icon == 'brain' %}
+                      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    {% elif habit.icon == 'droplet' %}
+                      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>
+                    {% elif habit.icon == 'activity' %}
+                      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                    {% else %}
+                      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    {% endif %}
+                  </div>
+
+                  <div class="habit-meta">
+                    <div class="habit-title-row">
+                      <span class="habit-name">{{ habit.name }}</span>
+                      <span class="badge badge-neutral" style="font-size: 0.7rem;">{{ habit.category }}</span>
+                    </div>
+                    <div class="habit-details-row">
+                      <span>Target: {{ habit.target_value }} {{ habit.target_unit }}</span>
+                      {% if habit.reminder_enabled %}
+                        <span>&bull; {{ habit.reminder_time|format_time }}</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="habit-check-right">
+                  <span class="habit-streak-pill" title="Current habit streak">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    <span class="habit-streak-count">{{ habit.streak }}d</span>
+                  </span>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Recent Activity Feed -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Recent Activity</h3>
+        <span class="text-sm text-muted">Latest completions</span>
+      </div>
+      <div class="card-body" style="padding: 16px 20px;">
+        {% if recent_activity|length == 0 %}
+          <p class="text-sm text-muted" style="text-align: center; padding: 16px;">No activity logged yet. Check off a habit above!</p>
+        {% else %}
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;">
+            {% for act in recent_activity %}
+              <li style="display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; padding-bottom: 10px; border-bottom: 1px solid var(--border-subtle);">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: {{ act.color or '#4F46E5' }};"></span>
+                  <span style="font-weight: 600; color: var(--text);">{{ act.name }}</span>
+                  <span class="badge badge-neutral" style="font-size: 0.7rem;">{{ act.category }}</span>
+                </div>
+                <div style="color: var(--text-muted); font-size: 0.775rem;">
+                  {{ act.completion_date }}
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Column: Weekly Activity Chart & Momentum -->
+  <div>
+    <!-- Weekly Chart Card -->
+    <div class="card" style="margin-bottom: 24px;">
+      <div class="card-header">
+        <div>
+          <h3>Weekly Rhythm</h3>
+          <p class="text-sm text-muted" style="margin-top: 2px;">Past 7 days completion rate</p>
+        </div>
+      </div>
+      <div class="card-body" style="padding: 20px;">
+        <div style="height: 180px; position: relative;">
+          <canvas id="weeklyActivityChart" 
+                  data-labels='{{ weekly_labels|tojson }}' 
+                  data-rates='{{ weekly_rates|tojson }}'></canvas>
+        </div>
+      </div>
+      <div class="card-footer" style="display: flex; justify-content: space-between; align-items: center;">
+        <span class="text-xs text-muted">Compound daily discipline</span>
+        <a href="{{ url_for('analytics.index') }}" class="text-xs font-semibold" style="color: var(--primary);">View Deep Analytics &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Momentum Card -->
+    <div class="card" style="background: linear-gradient(135deg, #1E1B4B 0%, #0F172A 100%); color: #FFFFFF; border: none; padding: 24px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+        <span style="font-size: 0.775rem; font-weight: 700; text-transform: uppercase; color: #818CF8; letter-spacing: 0.05em;">Momentum Status</span>
+        <span style="font-size: 1.25rem;">🔥</span>
+      </div>
+      <div style="font-size: 1.75rem; font-weight: 800; color: #FFFFFF; margin-bottom: 6px;">
+        {{ stats.current_streak }} Day Streak
+      </div>
+      <p style="font-size: 0.85rem; color: #94A3B8; margin-bottom: 20px; line-height: 1.5;">
+        {% if stats.current_streak >= 7 %}
+          Incredible flow! You have sustained an unbroken chain of consistency. Keep the fire burning today.
+        {% elif stats.current_streak > 0 %}
+          Great start! Keep logging habits daily to build compounding momentum and unlock new milestones.
+        {% else %}
+          Check off your habits today to kickstart your new streak!
+        {% endif %}
+      </p>
+      <a href="{{ url_for('achievements.index') }}" class="btn btn-secondary btn-sm" style="width: 100%; background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: #FFF;">
+        View Milestone Badges &rarr;
+      </a>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

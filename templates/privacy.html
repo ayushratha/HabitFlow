@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Privacy Policy — HabitFlow{% endblock %}
+{% block content %}
+<div style="max-width: 800px; margin: 60px auto; padding: 0 24px;">
+  <a href="{{ url_for('main.index') }}" class="btn btn-secondary btn-sm" style="margin-bottom: 24px;">&larr; Back to Home</a>
+  <h1 style="margin-bottom: 16px;">Privacy Policy</h1>
+  <p class="text-muted" style="margin-bottom: 24px;">Effective Date: January 1, 2025</p>
+  <div class="card" style="padding: 32px;">
+    <h3 style="margin-bottom: 8px;">1. Information We Collect</h3>
+    <p style="margin-bottom: 20px;">We collect information you provide directly to us when creating an account: your name, email address, password hash, and the habits you create and track.</p>
+    
+    <h3 style="margin-bottom: 8px;">2. How We Use Information</h3>
+    <p style="margin-bottom: 20px;">Your information is used strictly to provide the HabitFlow service, calculate your streaks, display analytics, and deliver reminders.</p>
+
+    <h3 style="margin-bottom: 8px;">3. Data Protection</h3>
+    <p>Passwords are securely hashed with industry-standard Werkzeug/Argon2/PBKDF2 encryption. We do not sell or monetize personal data.</p>
+  </div>
+</div>
+{% endblock %}

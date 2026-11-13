@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Terms of Service — HabitFlow{% endblock %}
+{% block content %}
+<div style="max-width: 800px; margin: 60px auto; padding: 0 24px;">
+  <a href="{{ url_for('main.index') }}" class="btn btn-secondary btn-sm" style="margin-bottom: 24px;">&larr; Back to Home</a>
+  <h1 style="margin-bottom: 16px;">Terms of Service</h1>
+  <p class="text-muted" style="margin-bottom: 24px;">Effective Date: January 1, 2025</p>
+  <div class="card" style="padding: 32px;">
+    <h3 style="margin-bottom: 8px;">1. Acceptance of Terms</h3>
+    <p style="margin-bottom: 20px;">By using HabitFlow, you agree to these Terms of Service. If you disagree with any part, you may cease usage or delete your account at any time.</p>
+    
+    <h3 style="margin-bottom: 8px;">2. User Responsibility</h3>
+    <p style="margin-bottom: 20px;">You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.</p>
+
+    <h3 style="margin-bottom: 8px;">3. Service Reliability</h3>
+    <p>HabitFlow is provided "as is" and "as available". We strive for 99.9% uptime and consistent data durability through robust SQLite storage.</p>
+  </div>
+</div>
+{% endblock %}
